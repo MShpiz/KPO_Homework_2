@@ -1,7 +1,7 @@
 package com.example.entities
 
 class Order() {
-    private val meals: MutableList<Meal> = mutableListOf()
+    val meals: MutableList<Meal> = mutableListOf()
     var state: OrderState = PreCookingState(this)
     fun getPrice(): UInt{
         var total: UInt = 0u

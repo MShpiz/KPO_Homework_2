@@ -2,10 +2,10 @@ package com.example.entities
 
 class CookedState(val order: Order):OrderState {
     override fun addMeal(meal: Meal) {
-        TODO("Not yet implemented")
+        throw NoSuchMethodException("can't add meal to a finnished order")
     }
 
     override fun cook() {
-        TODO("Not yet implemented")
+        throw NoSuchMethodException("can't cook a finnished order")
     }
 }
