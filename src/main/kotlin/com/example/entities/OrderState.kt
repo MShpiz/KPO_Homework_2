@@ -1,4 +1,6 @@
 package com.example.entities
 
-abstract class OrderState {
+interface OrderState {
+    fun addMeal(meal:Meal): Unit
+    fun cook():Unit
 }
