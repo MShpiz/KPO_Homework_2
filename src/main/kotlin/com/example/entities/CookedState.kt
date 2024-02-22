@@ -1,6 +1,6 @@
 package com.example.entities
 
-class CookedState(val order: Order):OrderState {
+class CookedState(private val order: Order):OrderState {
     override fun addMeal(meal: Meal) {
         throw NoSuchMethodException("can't add meal to a finnished order")
     }

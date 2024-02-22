@@ -1,6 +1,6 @@
 package com.example.entities
 
-class PreCookingState(val order: Order): OrderState {
+class PreCookingState(private val order: Order): OrderState {
 
     override fun addMeal(meal: Meal) {
         order.meals.add(meal)
