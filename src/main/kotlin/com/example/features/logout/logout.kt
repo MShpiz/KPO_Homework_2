@@ -1,28 +1,28 @@
-package com.example.features.login
+package com.example.features.logout
 
 import com.example.entities.AuthenticationManager
-import com.example.features.registration.RegistrationModel
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import java.security.InvalidParameterException
 
-fun Application.login() {
+fun Application.logout() {
     routing {
-        post("/login") {
-            val result = call.receive<RegistrationModel>()
+        post("/logout") {
+            val result = call.receive<LogoutModelRequest>()
 
             val authManager = AuthenticationManager
-            var token: ULong = 0u
+
             try{
-                token = authManager.logUserIn(result.login, result.password)
-            }  catch (e: ArrayStoreException) {
+                authManager.logOut(result.token)
+            }  catch (e: InvalidParameterException) {
                 call.respond(HttpStatusCode.Conflict, e.message.toString())
             } catch (e: Exception) {
                 call.respond(HttpStatusCode.BadGateway, e.message.toString())
             }
-            call.respond(HttpStatusCode.OK, LoginModelResponse(token))
+            call.respond(HttpStatusCode.OK, "log out successful")
         }
     }
 }

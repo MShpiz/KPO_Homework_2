@@ -8,9 +8,9 @@ import java.util.*
 object AuthenticationManager {
     private val dbAdapter: DBAdapter = DBAdapter()
     private val activeUsers: ActiveUsers = ActiveUsers()
-    fun addUser(login: String, hashPassword: String) {
+    fun addUser(login: String, hashPassword: String, role: Boolean) {
         try {
-            dbAdapter.addUser(login, hashPassword)
+            dbAdapter.addUser(login, hashPassword, (if (role) "admin" else "visitor"))
         } catch (e: NullPointerException) {
             throw NullPointerException("Something wrong with database")
         } catch (e: ArrayStoreException) {
@@ -47,6 +47,7 @@ object AuthenticationManager {
     fun logOut(token: ULong) {
         val user = activeUsers.activeUsers[token] ?: throw InvalidParameterException("user not logged in")
         activeUsers.activeUsers.remove(token)
+        dbAdapter.addUserActivity(UserActivity(user, "logout"))
     }
 
 
