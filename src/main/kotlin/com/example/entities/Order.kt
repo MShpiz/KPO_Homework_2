@@ -18,11 +18,15 @@ class Order() {
     }
 
     fun cancel() {
-        TODO("Not yet implemented")
+        if (state !is PreCookingState){
+            throw NoSuchMethodException("can't cancel cooking order")
+        }
+        meals.clear()
     }
 
     fun removeMeal(meal: Meal) {
-
+        if (state is PreCookingState) meals.remove(meal)
+        else throw NoSuchMethodException("can't remove cooking or cooked meals")
     }
 
 }
