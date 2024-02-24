@@ -20,7 +20,7 @@ class OrderBuilder {
 
         try{
             order.removeMeal(dbAdapter.getMeal(mealName));
-        } catch (e: ) {
+        } catch (e: InvalidAttributesException) {
             throw NoSuchMethodException("can't remove meal")
         } catch (e: IndexOutOfBoundsException) {
             throw e
