@@ -28,14 +28,18 @@ class OrderBuilder {
 
     }
 
-    fun cookOrder(): Order { //
+    fun cookOrder(): Unit { //
         order.cook()
-        return order
     }
 
     fun cancelOrder() {
         order.cancel()
         order = Order()
+    }
+
+    fun getOrder(): Order? {
+        if (order.state is CookedState) return order
+        return null
     }
 
 
