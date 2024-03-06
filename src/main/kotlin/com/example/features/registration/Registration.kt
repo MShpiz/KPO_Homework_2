@@ -7,7 +7,7 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
-fun Application.configureRouting() {
+fun Application.register() {
     routing {
         post("/register") {
             val result = call.receive<RegistrationModel>()

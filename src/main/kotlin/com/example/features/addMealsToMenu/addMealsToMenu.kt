@@ -3,7 +3,6 @@ package com.example.features.addMealsToMenu
 import com.example.entities.Admin
 import com.example.entities.AuthenticationManager
 import com.example.entities.Visitor
-import com.example.features.getMenu.AddMealsToMenuModelRequest
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*

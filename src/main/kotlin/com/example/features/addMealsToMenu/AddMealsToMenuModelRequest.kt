@@ -1,4 +1,4 @@
-package com.example.features.getMenu
+package com.example.features.addMealsToMenu
 
 import kotlinx.serialization.Serializable
 
