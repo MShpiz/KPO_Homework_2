@@ -2,6 +2,7 @@ package com.example
 
 import com.example.features.addMealsToMenu.addMealsToMenu
 import com.example.features.cancelOrder.cancelOrder
+import com.example.features.changeMealPrice.changeMealPrice
 import com.example.features.getIncome.getTotalIncome
 import com.example.features.getMenu.getMenu
 import com.example.features.getUserActivity.getUserActivity
@@ -41,4 +42,5 @@ fun Application.module() {
     register()
     removeMealFromMenu()
     removeMealFromOrder()
+    changeMealPrice()
 }

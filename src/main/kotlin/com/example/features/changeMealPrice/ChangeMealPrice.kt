@@ -3,8 +3,6 @@ package com.example.features.changeMealPrice
 import com.example.entities.Admin
 import com.example.entities.AuthenticationManager
 import com.example.entities.Visitor
-import com.example.features.getUserActivity.ActivityModelRequest
-import com.example.features.getUserActivity.ActivityModelResponse
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
