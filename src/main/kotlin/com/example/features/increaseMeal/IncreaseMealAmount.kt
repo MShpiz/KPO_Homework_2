@@ -1,20 +1,18 @@
-package com.example.features.decreaceMeal
+package com.example.features.increaseMeal
 
 import com.example.entities.Admin
 import com.example.entities.AuthenticationManager
 import com.example.entities.Visitor
-import com.example.features.getIncome.IncomeModelRequest
-import com.example.features.getIncome.IncomeModelResponse
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
-fun Application.decreaseMeal() {
+fun Application.increaseMeal() {
     routing {
-        post("/makeLessMealInMenu") {
-            val result = call.receive<DecreaseMealModerRequest>()
+        post("/increase_meal_amount") {
+            val result = call.receive<IncreaseMealModerRequest>()
 
             val user = AuthenticationManager.checkToken(result.token)
             if (user == null || user is Visitor) {
@@ -22,7 +20,7 @@ fun Application.decreaseMeal() {
             }
 
             try {
-                (user as Admin).dbAdapter.decreaceMeal(result.meal)
+                (user as Admin).dbAdapter.increaseMealAmount(result.meal)
             } catch (e: NullPointerException) {
                 call.respond(HttpStatusCode.BadGateway, "something went wrong")
             } catch (e: Exception) {
