@@ -15,17 +15,16 @@ fun Application.orderMeal() {
         post("/orderMeal") {
             val result = call.receive<OrderMealModelRequest>()
 
-            val authManager = AuthenticationManager
             val user = AuthenticationManager.checkToken(result.token)
             if (user == null || user is Admin){
                 call.respond(HttpStatusCode.Forbidden, "authorise as visitor first")
             }
             try {
-                (user as Visitor).orderBuilder.addMeal(result.mealName)
+                (user as Visitor).orderBuilder.addMeal(result.mealId)
             } catch (e: Exception) {
                 call.respond(HttpStatusCode.BadRequest, e.message.toString())
             }
-            call.respond(HttpStatusCode.OK, "added meal to order: " + result.mealName)
+            call.respond(HttpStatusCode.OK, "added meal to order")
         }
     }
 }

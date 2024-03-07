@@ -14,7 +14,6 @@ fun Application.makePayment() {
     routing {
         post("/pay") {
             val result = call.receive<PaymentRequest>()
-            val authManager = AuthenticationManager
             val user = AuthenticationManager.checkToken(result.token)
             if (user == null || user is Admin){
                 call.respond(HttpStatusCode.Forbidden, "authorise as visitor first")

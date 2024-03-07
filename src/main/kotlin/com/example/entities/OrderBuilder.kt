@@ -5,14 +5,14 @@ import javax.naming.directory.InvalidAttributesException
 class OrderBuilder {
     private var order: Order = Order()
     private val dbAdapter: DBAdapter = DBAdapter()
-    fun addMeal(mealName: String){
+    fun addMeal(mealId: Int){
         val meal: Meal
         try {
-            meal = dbAdapter.getMeal(mealName)
+            meal = dbAdapter.getMeal(mealId)
         } catch (e: IndexOutOfBoundsException) {
             throw IllegalArgumentException("no such meal")
         }
-        dbAdapter.decrementMeal(meal.id)
+        dbAdapter.decreaseMealAmount(meal.id)
         order.addMeal(meal)
     }
 

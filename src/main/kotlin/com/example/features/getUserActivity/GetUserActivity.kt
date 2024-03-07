@@ -20,7 +20,7 @@ fun Application.getUserActivity() {
             }
             var response: List<UserActivity>? = null
             try {
-                response = (user as Admin).dbAdapter.getUseActivity()
+                response = (user as Admin).dbAdapter.getUserActivity()
             } catch (e: NullPointerException) {
                 call.respond(HttpStatusCode.BadGateway, "something went wrong")
             } catch (e: Exception) {

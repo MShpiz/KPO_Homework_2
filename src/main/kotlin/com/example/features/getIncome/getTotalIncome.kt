@@ -18,15 +18,15 @@ fun Application.getTotalIncome() {
             if (user == null || user is Visitor) {
                 call.respond(HttpStatusCode.Forbidden, "authorise as admin first")
             }
-            var response: Map<String, Int>? = null
+            var response: Map<String, Int> = mapOf()
             try {
-                response = (user as Admin).dbAdapter.getFullIncome()
+                response = (user as Admin).dbAdapter.getTotalIncome()
             } catch (e: NullPointerException) {
                 call.respond(HttpStatusCode.BadGateway, "something went wrong")
             } catch (e: Exception) {
                 call.respond(HttpStatusCode.BadGateway)
             }
-            call.respond(HttpStatusCode.OK, IncomeModelResponse(response!!))
+            call.respond(HttpStatusCode.OK, IncomeModelResponse(response))
         }
     }
 }

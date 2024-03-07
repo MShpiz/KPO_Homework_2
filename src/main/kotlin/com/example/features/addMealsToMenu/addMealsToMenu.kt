@@ -18,7 +18,7 @@ fun Application.addMealsToMenu() {
                 call.respond(HttpStatusCode.Forbidden, "authorise as admin first")
             }
             try{
-                (user as Admin).dbAdapter.addMeal(result.itemName, result.itemPrice, result.itemAmount)
+                (user as Admin).dbAdapter.addMeal(result.itemName, result.itemPrice, result.cookingTime, result.itemAmount)
             } catch (e: Exception) {
                 call.respond(HttpStatusCode.BadRequest, "smt went wrong")
             }

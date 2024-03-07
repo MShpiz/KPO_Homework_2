@@ -7,7 +7,7 @@ class PaymentManager() {
     fun checkOut(cardNumber: UInt, order: Order): Boolean {
         if (!validate(cardNumber)) return false
         try {
-            DBAdapter.addSum(cardNumber, order.getPrice())
+            DBAdapter.addPayment(order.getPrice())
         } catch (e: NullPointerException) {
             throw NullPointerException("Smth wrong withdatabase")
         } catch (e: Exception) {

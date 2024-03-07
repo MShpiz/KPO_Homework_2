@@ -18,49 +18,56 @@ class DatabaseManager {
     )
 
     fun execute(sql: String): Boolean {
-        val c = getConnection()
+        val conn = getConnection()
         try {
-            c.use {
-                val query = c.prepareStatement(sql)
+            conn.use {
+                val query = conn.prepareStatement(sql)
                 return query.execute()
             }
 
         } catch (e: Exception) {
-            c.close()
+            conn.close()
 
             println(e.message)
             return false
         }
     }
 
-    fun executeQuery(sql: String): ResultSet? {
-        val c = getConnection()
+    fun executeQuery(sql: String, args: List<String>): ResultSet? {
+        val conn = getConnection()
         try {
-            c.use {
-                val query = c.prepareStatement(sql)
-
+            conn.use {
+                val query = conn.prepareStatement(sql)
+                var idx = 1
+                for (arg in args){
+                    query.setString(idx++, arg)
+                }
                 return query.executeQuery()
             }
 
         } catch (e: Exception) {
-            c.close()
+            conn.close()
 
             println(e.message)
             return null
         }
     }
 
-    fun update(sql: String): Int {
+    fun update(sql: String,  args: List<String>): Int {
 
-        val c = getConnection()
+        val conn = getConnection()
         try {
-            c.use {
-                val query = c.prepareStatement(sql)
+            conn.use {
+                val query = conn.prepareStatement(sql)
+                var idx = 1
+                for (arg in args){
+                    query.setString(idx++, arg)
+                }
                 return query.executeUpdate()
             }
 
         } catch (e: Exception) {
-            c.close()
+            conn.close()
 
             println(e.message)
             return 1
