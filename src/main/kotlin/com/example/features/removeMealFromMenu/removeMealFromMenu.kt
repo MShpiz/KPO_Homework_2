@@ -21,7 +21,7 @@ fun Application.removeMealFromMenu() {
             }
 
             try {
-                (user as Admin).dbAdapter.removeMealFromMenu(result.meal)
+                (user as Admin).dbAdapter.removeMealFromMenu(result.mealId)
             } catch (e: NullPointerException) {
                 call.respond(HttpStatusCode.BadGateway, "something went wrong")
             } catch (e: Exception) {

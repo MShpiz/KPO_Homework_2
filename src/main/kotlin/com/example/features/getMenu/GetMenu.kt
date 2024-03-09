@@ -9,7 +9,7 @@ import io.ktor.server.routing.*
 fun Application.getMenu() {
     routing {
         get("/menu") {
-            call.respond(HttpStatusCode.Forbidden, DBAdapter.getMenu())
+            call.respond(HttpStatusCode.Forbidden, MenuResponseModel(DBAdapter.getMenu()))
         }
     }
 }

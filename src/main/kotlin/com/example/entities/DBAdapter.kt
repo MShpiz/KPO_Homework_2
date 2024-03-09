@@ -36,14 +36,14 @@ object DBAdapter {
             id serial primary key,
             userId int,
             action int,
-            time string); 
+            time varchar(256)); 
         """.trimIndent()
         manager.execute(createUserActivityTable)
 
         val createIncomeTable= """
             create table if not exists income (
             id serial primary key,
-            date string,
+            date varchar(256),
             sum int); 
         """.trimIndent()
         manager.execute(createIncomeTable)
@@ -52,24 +52,25 @@ object DBAdapter {
     fun addUser(login: String, password: Int, role: Int) {
         val query = """
             select * from users
-            where login = '?'
+            where login = ?
             """.trimIndent()
-        val result = manager.
-        executeQuery(query, listOf(login, password.toString(), role.toString())) ?: throw NullPointerException()
+        val result = manager.executeQuery(query, listOf(login)) ?: throw NullPointerException()
+        println(result)
         if (result.next()){
+            println("USER EXISTS")
             throw InvalidParameterException("User with this login already exists")
         }
         val insertQuery = """
         insert into users (login, password, role)
-        values ('?', '?', '?');
+        values (?, ?, ?);
         """.trimIndent()
-        manager.update(insertQuery, listOf(login, password.toString(), role.toString()))
+        manager.update(insertQuery, listOf(login, password, role))
     }
 
     fun addMeal(name: String, price: UInt, cookingTime: UInt, amount: UInt) {
         val query = """
         select * from meals
-        where name = '?';
+        where name = ?;
         """.trimIndent()
         val result = manager.executeQuery(query, listOf(name)) ?: throw NullPointerException()
         if (result.next()){
@@ -77,58 +78,59 @@ object DBAdapter {
         }
         val insertQuery = """
         insert into meals (name, price, amount, cookingTime)
-        values ('?', '?','?', '?');
+        values (?, ?, ?, ?);
         """.trimIndent()
-        manager.update(insertQuery, listOf(name, price.toString(), amount.toString(), cookingTime.toString()))
+        manager.update(insertQuery, listOf(name, price, amount, cookingTime))
     }
 
     fun addUserActivity(userId: Int, typeOfAction: Int) {
         val query = """
         select * from users
-        where id = '?';
+        where id =  ? ;
         """.trimIndent()
-        val result = manager.executeQuery(query, listOf(userId.toString())) ?: throw NullPointerException()
+        val result = manager.executeQuery(query, listOf(userId)) ?: throw NullPointerException()
         if (!result.next()){
             throw InvalidParameterException()
         }
         val insertQuery = """
         insert into userActivity (userId, action, time)
-        values ('?', '?', '?');
+        values ( ? ,  ? ,  ? );
         """.trimIndent()
-        manager.update(insertQuery, listOf(userId.toString(), typeOfAction.toString(), dateTimeFormat.format(Date())))
+        manager.update(insertQuery, listOf(userId, typeOfAction, dateTimeFormat.format(Date())))
     }
 
     fun addPayment(sum: UInt){
         val query = """
         insert into income (date, sum)
-        values ('?','?');
+        values ( ? , ? );
         """.trimIndent()
-        manager.update(query, listOf(dateFormat.format(Date()), sum.toString()))
+        manager.update(query, listOf(dateFormat.format(Date()), sum))
     }
 
     fun getUser(login:String, passwordHash: Int): User {
         val query = """
         select * from users
-        where login = '?'
-        and password = '?';
+        where login =  ? 
+        and password =  ? ;
         """.trimIndent()
-        val result = manager.executeQuery(query, listOf(login, passwordHash.toString())) ?: throw NullPointerException()
+        val result = manager.executeQuery(query, listOf(login, passwordHash)) ?: throw NullPointerException()
         if (!result.next()){
             throw NullPointerException()
         }
-        if (result.getInt("role") == 1)
-            return Admin( result.getInt("id").toUInt(), result.getString("login"), result.getInt("password"))
-        return Visitor(result.getInt("id").toUInt(), result.getString("login"), result.getInt("password"))
+        if (result.getInt("role") == 2)
+            return Admin( result.getInt("id"), result.getString("login"), result.getInt("password"))
+        return Visitor(result.getInt("id"), result.getString("login"), result.getInt("password"))
     }
 
     fun getUserActivity(): MutableList<UserActivity>{
-        val data: MutableList<UserActivity> = mutableListOf<UserActivity>()
+        val data: MutableList<UserActivity> = mutableListOf()
         val query = """
             select * from userActivity;
         """.trimIndent()
         val result = manager.executeQuery(query, listOf()) ?: throw NullPointerException()
+        // TODO("достать логины юзеров")
         while (result.next()){
-            data.add(UserActivity(result.getInt("userId"), result.getString("typeOfAction"),
+            data.add(UserActivity(result.getInt("userId"), result.getInt("action"),
                 result.getString("time")))
         }
         return data
@@ -152,54 +154,54 @@ object DBAdapter {
     fun decreaseMealAmount(mealId: Int){
         val query = """
             select * from meals
-            where id = '?';
+            where id =  ? ;
         """.trimIndent()
-        val result = manager.executeQuery(query, listOf(mealId.toString())) ?: throw NullPointerException()
+        val result = manager.executeQuery(query, listOf(mealId)) ?: throw NullPointerException()
         val currAmount = result.getInt("amount")
         if (currAmount <= 0){
             throw InvalidParameterException("not enough meals")
         }
         val updateQuery = """
-            UPDATE meals SET amount = '?'
-            WHERE id = '?';
+            UPDATE meals SET amount =  ? 
+            WHERE id =  ? ;
         """.trimIndent()
-        manager.update(updateQuery, listOf((currAmount - 1).toString(), mealId.toString()))
+        manager.update(updateQuery, listOf((currAmount - 1), mealId))
     }
 
     fun increaseMealAmount(mealId: Int, amount: UInt = 1u){
         val query = """
             select * from meals
-            where id = '?';
+            where id =  ? ;
         """.trimIndent()
-        val result = manager.executeQuery(query, listOf(mealId.toString())) ?: throw NullPointerException()
+        val result = manager.executeQuery(query, listOf(mealId)) ?: throw NullPointerException()
         val currAmount = result.getInt("amount")
         val updateQuery = """
-            UPDATE meals SET amount = '?'
-            WHERE id = '?';
+            UPDATE meals SET amount =  ? 
+            WHERE id =  ? ;
         """.trimIndent()
-        manager.update(updateQuery, listOf((currAmount+amount.toInt()).toString(), mealId.toString()))
+        manager.update(updateQuery, listOf((currAmount+amount.toInt()), mealId))
     }
 
     fun changeMealPrice(mealId: Int, price: UInt){
         val query = """
             select * from meals
-            where id = '?';
+            where id =  ? ;
         """.trimIndent()
-        manager.executeQuery(query, listOf(mealId.toString())) ?: throw NullPointerException()
+        manager.executeQuery(query, listOf(mealId)) ?: throw NullPointerException()
 
         val updateQuery = """
-            UPDATE meals SET price = '?'
-            WHERE id = '?';
+            UPDATE meals SET price =  ? 
+            WHERE id =  ? ;
         """.trimIndent()
-        manager.update(updateQuery, listOf(price.toString(), mealId.toString()))
+        manager.update(updateQuery, listOf(price, mealId))
     }
 
     fun getMeal(mealId: Int) : Meal {
         val query = """
         select * from meals
-        where id = '?';
+        where id =  ? ;
         """.trimIndent()
-        val result = manager.executeQuery(query, listOf(mealId.toString())) ?: throw NullPointerException()
+        val result = manager.executeQuery(query, listOf(mealId)) ?: throw NullPointerException()
 
         return Meal(result.getString("name"), result.getInt("cookingTime").toUInt(), result.getInt("price").toUInt(), result.getInt("id"))
     }
@@ -219,17 +221,17 @@ object DBAdapter {
     fun removeMealFromMenu(mealId: Int){
         val query = """
         select * from meals
-        where id = '?';
+        where id =  ? ;
         """.trimIndent()
-        val result = manager.executeQuery(query, listOf(mealId.toString())) ?: throw NullPointerException()
+        val result = manager.executeQuery(query, listOf(mealId)) ?: throw NullPointerException()
         if (!result.next()){
             throw NullPointerException()
         }
         val deleteQuery = """
         delete from meals
-        where id = '?'
+        where id =  ? 
         """.trimIndent()
-        manager.update(deleteQuery, listOf(mealId.toString()))
+        manager.update(deleteQuery, listOf(mealId))
     }
 
 }

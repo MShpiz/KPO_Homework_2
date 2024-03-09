@@ -6,11 +6,11 @@ import java.security.InvalidParameterException
 import java.util.*
 
 object AuthenticationManager {
-    private val dbAdapter: DBAdapter = DBAdapter()
+    private val dbAdapter: DBAdapter = DBAdapter
     private val activeUsers: ActiveUsers = ActiveUsers()
-    fun addUser(login: String, hashPassword: String, role: Boolean) {
+    fun addUser(login: String, hashPassword: Int, role: Boolean) {
         try {
-            dbAdapter.addUser(login, hashPassword, (if (role) "admin" else "visitor"))
+            dbAdapter.addUser(login, hashPassword, (if (role) 2 else 1))
         } catch (e: NullPointerException) {
             throw NullPointerException("Something wrong with database")
         } catch (e: ArrayStoreException) {
@@ -19,10 +19,10 @@ object AuthenticationManager {
             throw Exception("Something went wrong")
         }
     }
-    fun logUserIn(login: String, hashPassword: String): ULong {
-        var user: User
+    fun logUserIn(login: String, hashPassword: Int): ULong {
+        val user: User
         try {
-            user = dbAdapter.getUser()
+            user = dbAdapter.getUser(login, hashPassword)
         } catch (e: NullPointerException) {
             throw NotFoundException("no such user")
         } catch (e: Exception) {
@@ -33,7 +33,8 @@ object AuthenticationManager {
             var token: ULong
             do {
                 token = (Random().nextInt(1000000000) + 10000000).toULong()
-            } while (activeUsers.activeUsers.keys.indexOf(token) == -1)
+            } while (activeUsers.activeUsers.keys.indexOf(token) != -1)
+            dbAdapter.addUserActivity(user.id.toInt(), 1)
             activeUsers.activeUsers[token] = user
             return token
         }
@@ -47,7 +48,7 @@ object AuthenticationManager {
     fun logOut(token: ULong) {
         val user = activeUsers.activeUsers[token] ?: throw InvalidParameterException("user not logged in")
         activeUsers.activeUsers.remove(token)
-        dbAdapter.addUserActivity(UserActivity(user, "logout"))
+        dbAdapter.addUserActivity(user.id.toInt(), 2)
     }
 
 

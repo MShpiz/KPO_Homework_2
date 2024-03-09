@@ -1,5 +1,6 @@
 package com.example.features.getUserActivity
 
+import com.example.entities.UserActivity
 import kotlinx.serialization.Serializable
 
 @Serializable

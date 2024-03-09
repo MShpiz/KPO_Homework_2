@@ -5,6 +5,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class RegistrationModel (
     val login: String,
-    val password: String,
+    val password: Int,
     val role: Boolean = false
 )

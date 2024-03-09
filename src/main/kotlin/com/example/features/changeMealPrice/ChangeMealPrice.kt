@@ -20,7 +20,7 @@ fun Application.changeMealPrice() {
             }
 
             try {
-                (user as Admin).dbAdapter.changeMealPrice(result.meal, result.price)
+                (user as Admin).dbAdapter.changeMealPrice(result.mealId, result.price)
             } catch (e: NullPointerException) {
                 call.respond(HttpStatusCode.BadGateway, "something went wrong")
             } catch (e: Exception) {

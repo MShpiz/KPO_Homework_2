@@ -11,13 +11,14 @@ fun Application.register() {
     routing {
         post("/register") {
             val result = call.receive<RegistrationModel>()
-
+            println("### ${result.login}, ${result.password}, ${result.role}")
             val authManager = AuthenticationManager
             try{
-                authManager.addUser(result.login, result.password)
+                authManager.addUser(result.login, result.password, result.role)
             }  catch (e: ArrayStoreException) {
                 call.respond(HttpStatusCode.Conflict, e.message.toString())
             } catch (e: Exception) {
+                println(e.message)
                 call.respond(HttpStatusCode.BadGateway, "something went wrong, try again later")
             }
             call.respond(HttpStatusCode.OK, "successful registration")

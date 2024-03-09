@@ -20,7 +20,7 @@ fun Application.increaseMeal() {
             }
 
             try {
-                (user as Admin).dbAdapter.increaseMealAmount(result.meal)
+                (user as Admin).dbAdapter.increaseMealAmount(result.mealId)
             } catch (e: NullPointerException) {
                 call.respond(HttpStatusCode.BadGateway, "something went wrong")
             } catch (e: Exception) {

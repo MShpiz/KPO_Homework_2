@@ -20,7 +20,7 @@ fun Application.removeMealFromOrder() {
                 call.respond(HttpStatusCode.Forbidden, "authorise as visitor first")
             }
             try {
-                (user as Visitor).orderBuilder.removeMeal(result.meal)
+                (user as Visitor).orderBuilder.removeMeal(result.mealId)
             } catch (e: NoSuchMethodException) {
                 call.respond(HttpStatusCode.MethodNotAllowed, e.message.toString())
             } catch (e: Exception) {

@@ -33,14 +33,24 @@ class DatabaseManager {
         }
     }
 
-    fun executeQuery(sql: String, args: List<String>): ResultSet? {
+    fun executeQuery(sql: String, args: List<Any>): ResultSet? {
         val conn = getConnection()
+
         try {
             conn.use {
                 val query = conn.prepareStatement(sql)
                 var idx = 1
                 for (arg in args){
-                    query.setString(idx++, arg)
+
+                    if (arg is UInt){
+                        query.setInt(idx++, arg.toInt())
+                    }
+                    else if (arg is Int){
+                        query.setInt(idx++, arg)
+                    }
+                    else{
+                        query.setString(idx++, arg.toString())
+                    }
                 }
                 return query.executeQuery()
             }
@@ -53,7 +63,7 @@ class DatabaseManager {
         }
     }
 
-    fun update(sql: String,  args: List<String>): Int {
+    fun update(sql: String,  args: List<Any>): Int {
 
         val conn = getConnection()
         try {
@@ -61,8 +71,18 @@ class DatabaseManager {
                 val query = conn.prepareStatement(sql)
                 var idx = 1
                 for (arg in args){
-                    query.setString(idx++, arg)
+
+                    if (arg is UInt){
+                        query.setInt(idx++, arg.toInt())
+                    }
+                    else if (arg is Int){
+                        query.setInt(idx++, arg)
+                    }
+                    else{
+                        query.setString(idx++, arg.toString())
+                    }
                 }
+                println(query.toString())
                 return query.executeUpdate()
             }
 

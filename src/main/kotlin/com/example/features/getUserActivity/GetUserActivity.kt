@@ -2,6 +2,7 @@ package com.example.features.getUserActivity
 
 import com.example.entities.Admin
 import com.example.entities.AuthenticationManager
+import com.example.entities.UserActivity
 import com.example.entities.Visitor
 import io.ktor.http.*
 import io.ktor.server.application.*
