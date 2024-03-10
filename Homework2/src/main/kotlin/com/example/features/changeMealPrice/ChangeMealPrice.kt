@@ -11,7 +11,7 @@ import io.ktor.server.routing.*
 
 fun Application.changeMealPrice() {
     routing {
-        post("/activity") {
+        post("/changePrice") {
             val result = call.receive<ChangeMealPriceModelRequest>()
 
             val user = AuthenticationManager.checkToken(result.token)
