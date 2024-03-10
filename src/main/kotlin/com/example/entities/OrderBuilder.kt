@@ -4,23 +4,22 @@ import javax.naming.directory.InvalidAttributesException
 
 class OrderBuilder {
     private var order: Order = Order()
-    private val dbAdapter: DBAdapter = DBAdapter()
-    fun addMeal(mealName: String){
+    fun addMeal(mealId: Int){
         val meal: Meal
         try {
-            meal = dbAdapter.getMeal(mealName)
+            meal = DBAdapter.getMeal(mealId)
         } catch (e: IndexOutOfBoundsException) {
             throw IllegalArgumentException("no such meal")
         }
-        dbAdapter.decrementMeal(meal.id)
+        DBAdapter.decreaseMealAmount(meal.id)
         order.addMeal(meal)
     }
 
-    fun removeMeal(mealName: String) {
+    fun removeMeal(mealId: Int) {
 
         try{
-            order.removeMeal(dbAdapter.getMeal(mealName));
-        } catch (e: ) {
+            order.removeMeal(DBAdapter.getMeal(mealId));
+        } catch (e: InvalidAttributesException) {
             throw NoSuchMethodException("can't remove meal")
         } catch (e: IndexOutOfBoundsException) {
             throw e
@@ -28,14 +27,18 @@ class OrderBuilder {
 
     }
 
-    fun cookOrder(): Order { //
+    fun cookOrder(): Unit { //
         order.cook()
-        return order
     }
 
     fun cancelOrder() {
         order.cancel()
         order = Order()
+    }
+
+    fun getOrder(): Order? {
+        if (order.state is CookedState) return order
+        return null
     }
 
 
