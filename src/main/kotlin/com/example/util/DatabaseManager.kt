@@ -52,6 +52,7 @@ class DatabaseManager {
                         query.setString(idx++, arg.toString())
                     }
                 }
+                println(query.toString())
                 return query.executeQuery()
             }
 
@@ -82,7 +83,6 @@ class DatabaseManager {
                         query.setString(idx++, arg.toString())
                     }
                 }
-                println(query.toString())
                 return query.executeUpdate()
             }
 

@@ -19,7 +19,8 @@ fun Application.getUserActivity() {
             if (user == null || user is Visitor) {
                 call.respond(HttpStatusCode.Forbidden, "authorise as admin first")
             }
-            var response: List<UserActivity>? = null
+            var response: List<UserActivity> = listOf()
+
             try {
                 response = (user as Admin).dbAdapter.getUserActivity()
             } catch (e: NullPointerException) {
@@ -27,7 +28,7 @@ fun Application.getUserActivity() {
             } catch (e: Exception) {
                 call.respond(HttpStatusCode.BadGateway)
             }
-            call.respond(HttpStatusCode.OK, ActivityModelResponse(response!!))
+            call.respond(HttpStatusCode.OK, ActivityModelResponse(response))
         }
     }
 }

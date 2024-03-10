@@ -34,7 +34,7 @@ object AuthenticationManager {
             do {
                 token = (Random().nextInt(1000000000) + 10000000).toULong()
             } while (activeUsers.activeUsers.keys.indexOf(token) != -1)
-            dbAdapter.addUserActivity(user.id.toInt(), 1)
+            dbAdapter.addUserActivity(user.id, 1)
             activeUsers.activeUsers[token] = user
             return token
         }
