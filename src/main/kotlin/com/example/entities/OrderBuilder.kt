@@ -10,6 +10,9 @@ class OrderBuilder {
             meal = DBAdapter.getMeal(mealId)
         } catch (e: IndexOutOfBoundsException) {
             throw IllegalArgumentException("no such meal")
+        } catch (e: Exception) {
+            println(e.message)
+            throw Exception("smth went wrong")
         }
         DBAdapter.decreaseMealAmount(meal.id)
         order.addMeal(meal)
